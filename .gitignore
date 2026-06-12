@@ -1,0 +1,5 @@
+Temp/
+*.log
+node_modules/
+.DS_Store
+uppi-mobilidade.zip
