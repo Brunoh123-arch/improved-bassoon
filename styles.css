@@ -347,41 +347,59 @@ body {
   width: 100%;
 }
 
-/* Card Styling */
+/* Card Styling — Minimal Notepad Style */
 .card {
   background-color: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 14px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   transition: var(--transition-smooth);
   cursor: pointer;
   position: relative;
   overflow: hidden;
 }
 
+/* Left accent bar */
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent-blue);
+  border-radius: 12px 0 0 12px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.card:hover::before { opacity: 1; }
+
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   border-color: #3a3a3c;
-  box-shadow: var(--shadow-premium);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 
-/* Dynamic Badge Colors */
+
+/* Tiny badge — smaller and less loud */
 .badge {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 20px;
   font-family: var(--font-title);
+  opacity: 0.85;
 }
 
 .badge-lancamento {
@@ -416,49 +434,61 @@ body {
 
 .card-date {
   color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  opacity: 0.6;
 }
 
 .card-title {
   font-family: var(--font-title);
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.35;
   color: var(--text-primary);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin: 0;
 }
 
 .card-excerpt {
   color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.55;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;
+  margin: 0;
 }
 
 .card-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-top: auto;
-  gap: 12px;
+  margin-top: 4px;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.card:hover .card-footer,
+.card:focus-within .card-footer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* On mobile always show footer */
+@media (hover: none) {
+  .card-footer { opacity: 1; transform: translateY(0); }
 }
 
 .card-author {
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: none; /* hidden - shown only in detail modal */
 }
+
 
 /* Buttons Styling */
 .btn-primary {

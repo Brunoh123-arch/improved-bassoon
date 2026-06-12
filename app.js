@@ -955,8 +955,7 @@ function renderGrid() {
       card.innerHTML = `
         <div class="card-header">
           <span class="badge ${catData.badgeClass}">${catData.label}</span>
-          ${isMostCopied ? `<span class="badge badge-most-copied">🔥 Principal (${post.copyCount}x)</span>` : ''}
-          <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="display:flex;align-items:center;gap:6px;">
             <span class="card-date">${formatDate(post.date)}</span>
             <button class="btn-favorite ${isFavoriteClass}" data-id="${post.id}" title="Favoritar">
               <svg class="favorite-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -968,12 +967,7 @@ function renderGrid() {
         <h3 class="card-title">${escapeHtml(post.title)}</h3>
         <p class="card-excerpt">${escapeHtml(post.content)}</p>
         <div class="card-footer">
-          <span class="card-author">Por ${escapeHtml(post.author)}</span>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-whatsapp" data-id="${post.id}" title="Enviar para o WhatsApp">
-              <svg viewBox="0 0 24 24" fill="currentColor" style="width: 14px; height: 14px; margin-top: 1px;"><path d="M12.012 2c-5.506 0-9.988 4.482-9.988 9.988 0 1.76.459 3.475 1.332 4.992L2 22l5.176-1.357c1.477.806 3.137 1.229 4.831 1.229 5.506 0 9.987-4.482 9.987-9.988C22 6.482 17.518 2 12.012 2zm0 18.294c-1.493 0-2.96-.401-4.243-1.162l-.305-.18-3.153.826.84-3.076-.197-.314c-.836-1.33-1.277-2.879-1.277-4.48.001-4.573 3.72-8.291 8.297-8.291 2.216.001 4.298.865 5.863 2.43 1.565 1.565 2.428 3.648 2.428 5.862-.002 4.573-3.722 8.291-8.297 8.291zm4.551-6.214c-.249-.125-1.477-.728-1.706-.811-.229-.083-.396-.125-.562.125-.166.249-.643.811-.788.975-.145.166-.29.187-.539.062-.25-.125-1.053-.388-2.007-1.239-.742-.662-1.242-1.48-1.388-1.729-.145-.249-.016-.384.109-.508.112-.112.249-.29.373-.436.125-.145.166-.249.249-.415.083-.166.042-.312-.021-.436-.062-.125-.562-1.351-.77-1.849-.2-.482-.404-.417-.551-.424-.143-.007-.307-.008-.472-.008-.166 0-.436.062-.663.312-.228.249-.871.851-.871 2.076s.892 2.409.991 2.541c.099.135 1.758 2.685 4.259 3.766.595.257 1.059.41 1.42.525.598.19 1.142.163 1.572.099.48-.072 1.477-.602 1.685-1.183.208-.581.208-1.079.145-1.183-.063-.104-.229-.166-.478-.291z"/></svg>
-            Whats
-          </button>
+          ${isMostCopied ? `<span class="badge badge-most-copied" style="margin-right:auto;">🔥 ${post.copyCount}x</span>` : ''}
           <button class="btn-copy" data-id="${post.id}">
             <svg viewBox="0 0 24 24" fill="none" class="btn-copy-icon">
               <path d="M16 4H4V16H16V4ZM18 2H2V18H18V2ZM22 6H20V20H6V22H22V6Z" fill="currentColor"/>
@@ -981,8 +975,8 @@ function renderGrid() {
             <span class="copy-text">Copiar</span>
           </button>
         </div>
-      </div>
       `;
+
 
       // Star Button click
       const btnFav = card.querySelector('.btn-favorite');
@@ -993,21 +987,12 @@ function renderGrid() {
         renderGrid();
       });
 
-      // WhatsApp Button click
-      const btnWA = card.querySelector('.btn-whatsapp');
-      btnWA.addEventListener('click', (e) => {
-        e.stopPropagation();
-        incrementCopyCount(post.id);
-        addToRecentCopies(post);
-        const textToShare = post.copyContent || post.content;
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(textToShare)}`, '_blank');
-      });
-
-      // Click on Card opens details (unless buttons clicked)
+      // Click on Card opens details (unless copy or favorite clicked)
       card.addEventListener('click', (e) => {
-        if (e.target.closest('.btn-copy') || e.target.closest('.btn-whatsapp') || e.target.closest('.btn-favorite')) return;
+        if (e.target.closest('.btn-copy') || e.target.closest('.btn-favorite')) return;
         openDetailModal(post);
       });
+
 
       // Wire Copy Button
       const btnCopy = card.querySelector('.btn-copy');

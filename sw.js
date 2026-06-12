@@ -1,4 +1,4 @@
-const CACHE_NAME = 'uppi-notas-v7';
+const CACHE_NAME = 'uppi-notas-v8';
 const ASSETS = [
   './index.html',
   './styles.css',
