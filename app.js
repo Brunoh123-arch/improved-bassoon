@@ -1347,25 +1347,36 @@ function openDetailModal(post) {
     };
   }
 
-  // Rename title — click to make contenteditable, blur to save
+  // Rename title — swap h1 for an input field (works on all browsers/mobile)
   const btnEditTitle = document.getElementById('btn-edit-title');
   if (btnEditTitle) {
     btnEditTitle.onclick = () => {
-      const isEditing = detailTitle.contentEditable === 'true';
+      const isEditing = btnEditTitle.classList.contains('editing-active');
       if (!isEditing) {
-        detailTitle.contentEditable = 'true';
-        detailTitle.focus();
-        // Place cursor at end
-        const range = document.createRange();
-        range.selectNodeContents(detailTitle);
-        range.collapse(false);
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(range);
+        // Replace h1 with input
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'detail-title-input';
+        input.value = post.title;
+        input.style.cssText = `
+          width:100%; background:#2c2c2e; border:none; border-bottom:2px solid var(--accent-green);
+          color:#fff; font-family:var(--font-title); font-size:22px; font-weight:800;
+          padding:4px 0; outline:none; border-radius:0;
+        `;
+        detailTitle.style.display = 'none';
+        detailTitle.parentNode.insertBefore(input, detailTitle);
+        input.focus();
+        input.select();
         btnEditTitle.classList.add('editing-active');
         btnEditTitle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17Z" fill="currentColor"/></svg> Salvar`;
+        input.onkeydown = (e) => { if (e.key === 'Enter') btnEditTitle.click(); };
       } else {
-        const newTitle = detailTitle.innerText.trim();
-        detailTitle.contentEditable = 'false';
+        // Save and swap back to h1
+        const input = document.getElementById('detail-title-input');
+        const newTitle = input ? input.value.trim() : post.title;
+        if (input) input.parentNode.removeChild(input);
+        detailTitle.style.display = '';
+        detailTitle.textContent = newTitle || post.title;
         btnEditTitle.classList.remove('editing-active');
         btnEditTitle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg> Renomear`;
         if (newTitle && newTitle !== post.title) {
@@ -1376,11 +1387,8 @@ function openDetailModal(post) {
         }
       }
     };
-    // Also save on Enter key
-    detailTitle.onkeydown = (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); btnEditTitle.click(); }
-    };
   }
+
 
   // Edit content — toggle between display div and textarea
   const btnEditContent = document.getElementById('btn-edit-content');
