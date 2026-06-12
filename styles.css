@@ -790,6 +790,102 @@ body {
   word-break: break-word;
 }
 
+/* Note Actions Bar — edit toolbar inside detail modal */
+.note-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #0a0a0c;
+  border-top: 1px solid var(--card-border);
+  flex-wrap: wrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.note-actions-bar::-webkit-scrollbar { display: none; }
+
+.note-action-group {
+  display: flex;
+  gap: 4px;
+}
+
+.note-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #2c2c2e;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  white-space: nowrap;
+}
+.note-action-btn:hover {
+  background: #3a3a3c;
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+.note-action-btn--danger:hover {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+  background: rgba(255, 69, 58, 0.1);
+}
+.note-action-btn.editing-active {
+  background: rgba(48, 209, 88, 0.15);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+.note-action-select {
+  background: #2c2c2e;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 6px 8px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-smooth);
+  max-width: 140px;
+}
+.note-action-select:hover,
+.note-action-select:focus {
+  border-color: var(--accent-blue);
+}
+
+/* Editable title & content states */
+.detail-title[contenteditable="true"] {
+  outline: none;
+  border-bottom: 2px solid var(--accent-green);
+  padding-bottom: 4px;
+  cursor: text;
+  caret-color: var(--accent-green);
+}
+.detail-content-editing {
+  width: 100%;
+  background: #1a1a1e;
+  border: 1.5px solid var(--accent-green);
+  border-radius: 10px;
+  padding: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+  min-height: 180px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  transition: var(--transition-smooth);
+}
+
 .detail-footer {
   background-color: #121212;
   border-top: 1px solid var(--card-border);
@@ -797,6 +893,7 @@ body {
   gap: 12px;
   padding: 20px 24px;
 }
+
 
 .btn-copy-large {
   flex-grow: 2;

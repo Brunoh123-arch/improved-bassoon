@@ -867,6 +867,7 @@ function renderGrid() {
   });
 
   const filtered = announcements.filter(post => {
+    if (post.archived) return false; // Hide archived notes
     const matchesCat = selectedCategory === 'all' || post.category === selectedCategory;
     const matchesSearch = 
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1296,6 +1297,157 @@ function openDetailModal(post) {
       }
     };
   }
+
+  // ── Note Actions Bar ──────────────────────────────────────────────
+  let currentFontSize = 16; // px
+
+  // Populate move-category select
+  const selectCat = document.getElementById('select-move-category');
+  if (selectCat) {
+    selectCat.innerHTML = '<option value="">📂 Mover para…</option>';
+    Object.keys(CATEGORY_REGISTRY).forEach(key => {
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = CATEGORY_REGISTRY[key].label;
+      if (key === post.category) opt.selected = true;
+      selectCat.appendChild(opt);
+    });
+    selectCat.onchange = () => {
+      const newCat = selectCat.value;
+      if (!newCat || newCat === post.category) return;
+      post.category = newCat;
+      const catData = CATEGORY_REGISTRY[newCat];
+      post.categoryLabel = catData ? catData.label.replace(/^([^\w\s\d]+\s*)/, '') : 'Comunicado';
+      saveAnnouncements();
+      renderGrid();
+      renderFilterPills();
+      // Update badge in modal
+      detailBadge.textContent = catData ? catData.label : 'Comunicado';
+      detailBadge.className = `detail-category-badge badge ${catData ? catData.badgeClass : 'badge-comunicado'}`;
+      showToast(`✅ Nota movida para ${catData ? catData.label : newCat}`);
+    };
+  }
+
+  // Font size controls
+  const btnFontSmaller = document.getElementById('btn-font-smaller');
+  const btnFontLarger  = document.getElementById('btn-font-larger');
+  currentFontSize = 16;
+  if (detailContent) detailContent.style.fontSize = currentFontSize + 'px';
+
+  if (btnFontSmaller) {
+    btnFontSmaller.onclick = () => {
+      currentFontSize = Math.max(11, currentFontSize - 2);
+      detailContent.style.fontSize = currentFontSize + 'px';
+    };
+  }
+  if (btnFontLarger) {
+    btnFontLarger.onclick = () => {
+      currentFontSize = Math.min(26, currentFontSize + 2);
+      detailContent.style.fontSize = currentFontSize + 'px';
+    };
+  }
+
+  // Rename title — click to make contenteditable, blur to save
+  const btnEditTitle = document.getElementById('btn-edit-title');
+  if (btnEditTitle) {
+    btnEditTitle.onclick = () => {
+      const isEditing = detailTitle.contentEditable === 'true';
+      if (!isEditing) {
+        detailTitle.contentEditable = 'true';
+        detailTitle.focus();
+        // Place cursor at end
+        const range = document.createRange();
+        range.selectNodeContents(detailTitle);
+        range.collapse(false);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        btnEditTitle.classList.add('editing-active');
+        btnEditTitle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17Z" fill="currentColor"/></svg> Salvar`;
+      } else {
+        const newTitle = detailTitle.innerText.trim();
+        detailTitle.contentEditable = 'false';
+        btnEditTitle.classList.remove('editing-active');
+        btnEditTitle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg> Renomear`;
+        if (newTitle && newTitle !== post.title) {
+          post.title = newTitle;
+          saveAnnouncements();
+          renderGrid();
+          showToast('✅ Título salvo!');
+        }
+      }
+    };
+    // Also save on Enter key
+    detailTitle.onkeydown = (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); btnEditTitle.click(); }
+    };
+  }
+
+  // Edit content — toggle between display div and textarea
+  const btnEditContent = document.getElementById('btn-edit-content');
+  let contentTextarea = null;
+  if (btnEditContent) {
+    btnEditContent.onclick = () => {
+      const isEditing = !!contentTextarea;
+      if (!isEditing) {
+        // Switch to textarea
+        contentTextarea = document.createElement('textarea');
+        contentTextarea.className = 'detail-content-editing';
+        contentTextarea.style.fontSize = currentFontSize + 'px';
+        contentTextarea.value = post.content;
+        detailContent.style.display = 'none';
+        detailContent.parentNode.insertBefore(contentTextarea, detailContent);
+        contentTextarea.focus();
+        btnEditContent.classList.add('editing-active');
+        btnEditContent.innerHTML = `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17Z" fill="currentColor"/></svg> Salvar`;
+      } else {
+        // Save and switch back to display div
+        const newContent = contentTextarea.value.trim();
+        contentTextarea.parentNode.removeChild(contentTextarea);
+        contentTextarea = null;
+        detailContent.style.display = '';
+        btnEditContent.classList.remove('editing-active');
+        btnEditContent.innerHTML = `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06zM17.66 3a1 1 0 0 0-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" fill="currentColor"/></svg> Editar`;
+        if (newContent && newContent !== post.content) {
+          post.content = newContent;
+          post.copyContent = newContent;
+          // Re-detect category from new text
+          const newCat = determineCategory(post.title + '\n' + newContent);
+          post.category = newCat;
+          const catData = CATEGORY_REGISTRY[newCat];
+          post.categoryLabel = catData ? catData.label.replace(/^([^\w\s\d]+\s*)/, '') : 'Comunicado';
+          saveAnnouncements();
+          renderGrid();
+          renderFilterPills();
+          // Refresh modal display
+          detailContent.textContent = newContent;
+          detailBadge.textContent = catData ? catData.label : 'Comunicado';
+          detailBadge.className = `detail-category-badge badge ${catData ? catData.badgeClass : 'badge-comunicado'}`;
+          // Update category select
+          const sc = document.getElementById('select-move-category');
+          if (sc) Array.from(sc.options).forEach(o => o.selected = o.value === newCat);
+          showToast('✅ Nota atualizada e categoria detectada!');
+        }
+      }
+    };
+  }
+
+  // Archive note
+  const btnArchive = document.getElementById('btn-archive-note');
+  if (btnArchive) {
+    const isArchived = !!post.archived;
+    btnArchive.innerHTML = isArchived
+      ? `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 6.5L17.5 12H14v2h-4v-2H6.5L12 6.5zM5.12 5l.81-1h12l.94 1H5.12z" fill="currentColor"/></svg> Desarquivar`
+      : `<svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z" fill="currentColor"/></svg> Arquivar`;
+
+    btnArchive.onclick = () => {
+      post.archived = !post.archived;
+      saveAnnouncements();
+      renderGrid();
+      closeDetailModal();
+      showToast(post.archived ? '📁 Nota arquivada.' : '📂 Nota restaurada.');
+    };
+  }
+  // ──────────────────────────────────────────────────────────────────
 
   modalDetail.classList.remove('hidden');
   document.body.style.overflow = 'hidden';

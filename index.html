@@ -697,6 +697,33 @@
           <!-- Renderizado dinamicamente em app.js -->
         </div>
       </div>
+      <!-- Nota: Barra de ações de edição -->
+      <div class="note-actions-bar" id="note-actions-bar">
+        <!-- Tamanho do Texto -->
+        <div class="note-action-group">
+          <button class="note-action-btn" id="btn-font-smaller" title="Texto menor">A<span style="font-size:9px">-</span></button>
+          <button class="note-action-btn" id="btn-font-larger" title="Texto maior">A<span style="font-size:9px">+</span></button>
+        </div>
+        <!-- Editar título -->
+        <button class="note-action-btn" id="btn-edit-title" title="Renomear nota">
+          <svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>
+          Renomear
+        </button>
+        <!-- Editar conteúdo -->
+        <button class="note-action-btn" id="btn-edit-content" title="Editar texto da nota">
+          <svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06zM17.66 3a1 1 0 0 0-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" fill="currentColor"/></svg>
+          Editar
+        </button>
+        <!-- Mover categoria -->
+        <select class="note-action-select" id="select-move-category" title="Mover para outra categoria">
+          <!-- opções preenchidas por JS -->
+        </select>
+        <!-- Arquivar -->
+        <button class="note-action-btn note-action-btn--danger" id="btn-archive-note" title="Arquivar nota">
+          <svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z" fill="currentColor"/></svg>
+          Arquivar
+        </button>
+      </div>
       <div class="modal-footer detail-footer" style="gap: 8px; justify-content: space-between;">
         <button class="btn-readability" id="btn-toggle-readability" title="Melhorar quebras de linha para leitura" style="flex-grow: 1; padding: 12px 6px; font-size: 11px;">
           <svg viewBox="0 0 24 24" fill="none" class="readability-icon" style="width: 14px; height: 14px; margin-top: 1px;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5C17 19.5 21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" fill="currentColor"/></svg>
