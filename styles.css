@@ -918,41 +918,65 @@ body {
 
 /* --- Large Mobile: max 768px --- */
 @media (max-width: 768px) {
-  /* Layout */
+  /* Layout: stack vertically */
   .feed-container-layout {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
   }
+
+  /* Sidebar: sticky horizontal pill bar on mobile */
   .feed-sidebar {
-    position: static;
-    padding: 12px 14px;
-    border-radius: 12px;
+    position: sticky;
+    top: 54px;
+    z-index: 90;
+    background: rgba(10, 10, 12, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: none;
+    border-bottom: 1px solid var(--card-border);
+    border-radius: 0;
+    padding: 10px 14px;
+    margin-left: -14px;
+    margin-right: -14px;
+    width: calc(100% + 28px);
   }
+
+  /* Hide "Categorias" label on mobile (bar is self-explanatory) */
+  .sidebar-header {
+    display: none;
+  }
+
+  /* Pills go horizontal and scroll */
   .filter-pills-container.vertical {
     flex-direction: row;
     overflow-x: auto;
     gap: 8px;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
   .filter-pills-container.vertical::-webkit-scrollbar {
     display: none;
   }
   .filter-pills-container.vertical .filter-pill {
     width: auto;
+    flex-shrink: 0;
     white-space: nowrap;
-    padding: 8px 14px;
+    padding: 7px 14px;
     border-radius: 20px;
     font-size: 12px;
   }
+
   .feed-main-content {
     width: 100%;
   }
   .cards-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
   }
 }
+
 
 /* --- Mobile: max 600px --- */
 @media (max-width: 600px) {
