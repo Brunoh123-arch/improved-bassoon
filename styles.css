@@ -81,7 +81,6 @@ body {
 }
 
 .header-container {
-  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding: 0 24px;
@@ -113,12 +112,14 @@ body {
 
 /* Main Container Layout */
 .main-container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 28px 20px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 28px;
+  box-sizing: border-box;
 }
 
 /* Hero Section */
@@ -546,13 +547,14 @@ body {
   border: 1px solid var(--card-border);
   border-radius: 14px;
   width: 100%;
-  max-width: 600px;
-  max-height: 90%;
+  max-width: 640px;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
   transform: translateY(0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .modal-overlay.hidden .modal-card {
@@ -725,7 +727,7 @@ body {
 
 /* Detail Modal Modifications */
 .detail-card {
-  max-width: 650px;
+  max-width: 680px;
 }
 
 .detail-body {
@@ -1195,6 +1197,53 @@ body {
   }
   .header-container {
     padding: 0 10px;
+  }
+}
+
+/* --- Full-width guarantee for all mobile --- */
+@media (max-width: 600px) {
+  /* Ensure nothing overflows horizontally */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  .main-container {
+    padding: 12px 12px;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+  .header-container {
+    padding: 0 12px;
+    max-width: 100%;
+  }
+  /* Modals go full screen bottom-sheet on mobile */
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .modal-card,
+  .detail-card {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 93vh;
+  }
+  /* Cards fill full width */
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+  /* Feed layout stack */
+  .feed-container-layout {
+    margin-top: 0;
+    gap: 10px;
+    width: 100%;
+  }
+  /* Hero no top margin */
+  .hero-section {
+    margin-top: 0;
   }
 }
 
