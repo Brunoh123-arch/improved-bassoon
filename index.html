@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uppi Notas - Organizador de Mensagens</title>
+  <meta name="description" content="Central de organização e cópia rápida de mensagens e comunicados da Uppi Mobilidade em Castanhal.">
+  
+  <!-- Premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- PWA & Mobile Configuration -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <meta name="theme-color" content="#1c1c1e">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Cupertino Login Modal -->
+  <div class="login-overlay" id="modal-login">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 38px; height: 38px;">
+          <path d="M7 17L12 12L17 17M7 12L12 7L17 12" stroke="#30D158" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span style="font-family: var(--font-title); font-size: 24px; font-weight: 800; color: #fff;">uppi notas</span>
+      </div>
+      <p class="login-subtitle" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; text-align: center;">Painel Administrativo & Mensagens</p>
+      <form id="login-form" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="form-group">
+          <label style="font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase;">E-MAIL</label>
+          <input type="email" id="login-email" required placeholder="admin@uppi.com.br" value="admin@uppi.com.br" autocapitalize="none" autocorrect="off" style="background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-family: var(--font-body); outline: none;">
+        </div>
+        <div class="form-group">
+          <label style="font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase;">SENHA</label>
+          <input type="password" id="login-password" required placeholder="Digite sua senha" autocapitalize="none" autocorrect="off" style="background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-family: var(--font-body); outline: none;">
+        </div>
+        <div id="login-error-msg" class="login-error hidden" style="color: var(--accent-red); font-size: 12px; font-weight: 600; text-align: center;">E-mail ou senha incorretos.</div>
+        <button type="submit" style="background: var(--accent-green); color: #000; font-family: var(--font-title); font-size: 14px; font-weight: 700; border: none; border-radius: 8px; padding: 12px; cursor: pointer; transition: var(--transition-smooth); margin-top: 8px;">Entrar no Painel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Navigation Header -->
+  <!-- Navigation Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <!-- iOS Double Chevron-like SVG icon -->
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 17L12 12L17 17M7 12L12 7L17 12" stroke="#30D158" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="logo-text">uppi notas</span>
+      </div>
+      <div class="header-actions" style="display: flex; align-items: center; gap: 8px;">
+        <button id="btn-open-settings" class="btn-secondary-hdr" title="Ajustes do Aplicativo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; color: var(--text-secondary); display: block;">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+        <button id="btn-open-compose" class="btn-primary" aria-label="Adicionar Comunicado">
+          <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          Novo
+        </button>
+      </div>
+    </div>
+  </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+      
+      <!-- Central de Alertas e Notificações (Trânsito & Avisos) -->
+      <section class="alerts-banner-container" id="alerts-banner-container">
+        <div class="alerts-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="alerts-pulsing-dot"></span>
+            <span class="alerts-title">🚨 CENTRAL DE AVISOS & TRÂNSITO CASTANHAL</span>
+          </div>
+          <button id="btn-toggle-add-alert" class="btn-link-action" style="font-size: 11px;">+ Reportar Alerta</button>
+        </div>
+        <div id="add-alert-form-container" class="add-alert-form hidden">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; margin-top: 8px; align-items: center;">
+            <select id="new-alert-type" style="background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-body); outline: none;">
+              <option value="🚨 Blitz">🚨 Blitz</option>
+              <option value="⚠️ Trânsito">⚠️ Trânsito</option>
+              <option value="💡 Demanda">💡 Demanda</option>
+              <option value="📢 Alerta">📢 Alerta</option>
+            </select>
+            <input type="text" id="new-alert-text" placeholder="Descreva o ocorrido (ex: Radar na BR-316 perto do Apeú)" style="flex-grow: 1; background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-body); outline: none;">
+            <button id="btn-save-new-alert" class="btn-green-sm" style="padding: 6px 12px; font-size: 11px;">Enviar</button>
+          </div>
+        </div>
+        <div class="alerts-list" id="alerts-list">
+          <!-- Renderizado dinamicamente em app.js -->
+        </div>
+      </section>
+
+      <!-- Hero / Intro -->
+      <section class="hero-section">
+        <span class="badge-accent">Central Oficial</span>
+        <h1 class="hero-title">Inovações em Mobilidade</h1>
+        <p class="hero-subtitle">Acompanhe comunicados oficiais, contratações, mensagens da administração e atualizações em tempo real do ecossistema Uppi.</p>
+      </section>
+
+    <!-- Top Grid Panels (Organizer + Tips Carousel) -->
+    <div class="top-panels-grid">
+      <!-- Permanent Quick Paste Smart Auto-Organizer -->
+      <section class="organizer-card" id="organizer-section">
+        <div class="organizer-header">
+          <svg class="sparkles-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3V6M12 18V21M3 12H6M18 12H21M5.636 5.636L7.757 7.757M16.243 16.243L18.364 18.364M5.636 18.364L7.757 16.243M16.243 7.757L18.364 5.636" stroke="#30D158" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 8L13.5 10.5L16 12L13.5 13.5L12 16L10.5 13.5L8 12L10.5 10.5L12 8Z" fill="#30D158"/>
+          </svg>
+          <h2>ORGANIZADOR AUTOMÁTICO DE TEXTOS</h2>
+        </div>
+        <p class="organizer-description">Cole a mensagem bruta recebida (WhatsApp, Instagram, etc) no campo abaixo e envie. A central vai identificar a categoria, extrair o título e criar seu card de cópia rápida automaticamente!</p>
+        
+        <div class="organizer-input-group">
+          <textarea id="quick-paste-input" placeholder="Cole a mensagem bruta completa aqui..." rows="3"></textarea>
+          <button id="btn-quick-paste" class="btn-green-round" aria-label="Adicionar e organizar">
+            <svg viewBox="0 0 24 24" fill="none" class="send-icon">
+              <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Progresso permanente do Checklist de Lançamento -->
+        <div class="organizer-checklist-widget" id="left-checklist-widget">
+          <div class="widget-header">
+            <span>🏁 PROGRESSO DO LANÇAMENTO</span>
+            <span id="left-checklist-count">0/5</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="left-checklist-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+        
+        <!-- Histórico de Cópias Recentes -->
+        <div class="organizer-checklist-widget" id="left-recent-copies-widget" style="margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border);">
+          <div class="widget-header" style="display: flex; justify-content: space-between; font-family: var(--font-title); font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; margin-bottom: 8px;">
+            <span>🕒 COPIADOS RECENTEMENTE</span>
+          </div>
+          <ul class="recent-copies-list" id="recent-copies-list">
+            <li class="recent-copy-empty">Nenhuma cópia recente.</li>
+          </ul>
+        </div>
+
+        <!-- Bloco de Rascunho Rápido -->
+        <div class="organizer-checklist-widget" id="left-scratchpad-widget" style="margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border);">
+          <div class="widget-header" style="display: flex; justify-content: space-between; font-family: var(--font-title); font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; margin-bottom: 8px;">
+            <span>📝 BLOCO DE RASCUNHO RÁPIDO</span>
+          </div>
+          <textarea id="sidebar-scratchpad" placeholder="Escreva anotações rápidas temporárias aqui..." rows="4" style="width: 100%; background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 8px; border-radius: 8px; font-family: var(--font-body); font-size: 12px; resize: none; outline: none; transition: var(--transition-smooth);"></textarea>
+          <div style="display: flex; gap: 8px; margin-top: 6px; justify-content: flex-end;">
+            <button id="btn-clear-scratchpad" type="button" style="padding: 4px 8px; font-size: 10px; background: rgba(255, 69, 58, 0.1); color: var(--accent-red); border: none; border-radius: 6px; cursor: pointer; font-family: var(--font-body); font-weight: 600;">Limpar</button>
+            <button id="btn-copy-scratchpad" class="btn-green-sm" type="button" style="padding: 4px 10px; font-size: 10px; cursor: pointer;">Copiar Tudo</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Painel de Crescimento Uppi (Abas de Dicas, Calculadora, Bairros e Checklist) -->
+      <section class="tips-card growth-panel" id="growth-panel-section">
+        <!-- iOS style segmented control tab bar -->
+        <div class="growth-tabs">
+          <button class="growth-tab active" data-tab="tab-tips" aria-label="Dicas">💡 Dicas</button>
+          <button class="growth-tab" data-tab="tab-calc" aria-label="Ganhos">📊 Ganhos</button>
+          <button class="growth-tab" data-tab="tab-bairros" aria-label="Bairros">📍 Bairros</button>
+          <button class="growth-tab" data-tab="tab-checklist" aria-label="Checklist">✅ Checklist</button>
+          <button class="growth-tab" data-tab="tab-meta" aria-label="Metas">🎯 Metas</button>
+          <button class="growth-tab" data-tab="tab-contacts" aria-label="Contatos">📞 Contatos</button>
+          <button class="growth-tab" data-tab="tab-roadmap" aria-label="Roadmap">🗺️ Roadmap</button>
+        </div>
+
+        <!-- Tab 1: Dicas (Carousel + Criador) -->
+        <div id="tab-tips" class="growth-tab-content active">
+          <div class="tips-header">
+            <svg class="tips-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.914A2 2 0 0113.255 17h-2.51a2 2 0 01-1.732-1.077L8.465 15M12 18v3m-3 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <h2>DICAS DE CRESCIMENTO UPPI</h2>
+          </div>
+          <div class="tips-carousel">
+            <!-- Slide 1 -->
+            <div class="tip-slide active">
+              <span class="tip-tag">📢 Divulgação Local</span>
+              <p class="tip-text">Adesive o vidro traseiro dos primeiros 15 motoristas para espalhar a marca do Uppi rapidamente no centro e bairros de Castanhal.</p>
+            </div>
+            <!-- Slide 2 -->
+            <div class="tip-slide">
+              <span class="tip-tag">🤝 Parcerias Comerciais</span>
+              <p class="tip-text">Feche parcerias com bares e lanchonetes famosos da Praça do Estrela. Coloque o banner deles no app em troca de batatas fritas ou brindes para quem for de Uppi.</p>
+            </div>
+            <!-- Slide 3 -->
+            <div class="tip-slide">
+              <span class="tip-tag">💸 Modelo de Caixa Justo</span>
+              <p class="tip-text">Taxa zero nas corridas em dinheiro ou Pix direto fideliza motoristas na hora. Cobre taxas ou assinaturas apenas nas corridas digitais.</p>
+            </div>
+            <!-- Slide 4 -->
+            <div class="tip-slide">
+              <span class="tip-tag">💎 Cadastro Fundador</span>
+              <p class="tip-text">Venda o lote VIP "50 Fundadores do Uppi" por R$ 100 com 30 dias de taxa zero. Isso capitaliza o seu caixa logo no primeiro dia!</p>
+            </div>
+            <!-- Slide 5 -->
+            <div class="tip-slide">
+              <span class="tip-tag">📍 Estratégia de Nicho</span>
+              <p class="tip-text">Foque nos bairros onde as gigantes cancelam corridas (Jaderlândia, Ianetama, Apeú). O motorista que ganha bem não cancela e conquista o cliente.</p>
+            </div>
+          </div>
+          <div class="tips-controls">
+            <button id="btn-prev-tip" class="btn-tip-control" aria-label="Anterior">&larr;</button>
+            <span class="tips-indicator" id="tips-indicator">1 / 5</span>
+            <button id="btn-next-tip" class="btn-tip-control" aria-label="Próximo">&rarr;</button>
+          </div>
+          
+          <div class="add-tip-trigger-container">
+            <button id="btn-toggle-add-tip" class="btn-link-action">➕ Adicionar Nova Dica</button>
+          </div>
+          
+          <div id="add-tip-form-container" class="add-tip-form-container hidden">
+            <input type="text" id="new-tip-tag" placeholder="Ex: 📢 Parcerias ou 🚀 Lançamento" required>
+            <textarea id="new-tip-text" placeholder="Escreva a dica de marketing aqui..." rows="2" required></textarea>
+            <div class="add-tip-actions">
+              <button type="button" id="btn-save-new-tip" class="btn-green-sm">Salvar Dica</button>
+              <button type="button" id="btn-cancel-new-tip" class="btn-secondary-sm">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Ganho$ (Calculadora de Ganhos) -->
+        <div id="tab-calc" class="growth-tab-content">
+          <div class="tips-header">
+            <svg class="tips-icon" viewBox="0 0 24 24" fill="none" style="color: var(--accent-green)">
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="currentColor"/>
+            </svg>
+            <h2 style="color: var(--accent-green)">SIMULADOR DE GANHOS</h2>
+          </div>
+          <div class="growth-calc-container">
+            <div class="calc-field-group">
+              <label for="calc-ride-value">VALOR ESTIMADO DA CORRIDA (R$)</label>
+              <input type="number" id="calc-ride-value" value="15" min="5" max="500" step="1">
+            </div>
+            
+            <!-- Custo de Combustível -->
+            <div class="fuel-calculator-inputs" style="display: flex; gap: 8px; margin-top: 4px;">
+              <div class="calc-field-group" style="flex: 1;">
+                <label style="font-size: 8px; font-weight: 700; color: var(--text-secondary);">DISTÂNCIA (KM)</label>
+                <input type="number" id="calc-fuel-dist" value="5" min="1" max="100">
+              </div>
+              <div class="calc-field-group" style="flex: 1;">
+                <label style="font-size: 8px; font-weight: 700; color: var(--text-secondary);">CONSUMO (KM/L)</label>
+                <input type="number" id="calc-fuel-cons" value="10" min="1" max="30">
+              </div>
+              <div class="calc-field-group" style="flex: 1;">
+                <label style="font-size: 8px; font-weight: 700; color: var(--text-secondary);">VALOR GAS (R$/L)</label>
+                <input type="number" id="calc-fuel-price" value="5.50" min="1" max="10" step="0.05">
+              </div>
+            </div>
+
+            <div class="calc-results">
+              <div class="calc-result-row">
+                <span>Ganhos no Uppi (Taxa Zero):</span>
+                <span class="highlight-green" id="calc-uppi-earning">R$ 15,00</span>
+              </div>
+              <div class="calc-result-row">
+                <span>Custo de Combustível estimado:</span>
+                <span class="highlight-red" id="calc-fuel-cost">R$ 2,75</span>
+              </div>
+              <div class="calc-result-row total" style="border-top: 1.5px dashed var(--card-border); padding-top: 8px; margin-top: 4px;">
+                <span>Lucro Real Líquido no Uppi:</span>
+                <span class="highlight-glow" id="calc-uppi-net-profit">R$ 12,25</span>
+              </div>
+              <div class="calc-result-row" style="font-size: 11px; margin-top: 2px;">
+                <span>Outros Apps (Líquido c/ Taxa 30%):</span>
+                <span class="highlight-red" id="calc-other-net-profit">R$ 7,75</span>
+              </div>
+              <div class="calc-result-row" style="font-size: 11px; font-weight: 600; color: #ffffff; border-top: 1px solid var(--card-border); padding-top: 6px; margin-top: 4px;">
+                <span>Diferença Real de Lucro:</span>
+                <span class="highlight-glow" id="calc-diff-earning">R$ 4,50</span>
+              </div>
+            </div>
+            <button id="btn-copy-calc-proposal" class="btn-primary-action calc-action">
+              <svg viewBox="0 0 24 24" fill="none" class="btn-icon">
+                <path d="M16 4H4V16H16V4ZM18 2H2V18H18V2ZM22 6H20V20H6V22H22V6Z" fill="currentColor"/>
+              </svg>
+              <span>Copiar Abordagem ⚡</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 3: Bairros (Estratégias Castanhal) -->
+        <div id="tab-bairros" class="growth-tab-content">
+          <div class="tips-header">
+            <svg class="tips-icon" viewBox="0 0 24 24" fill="none" style="color: #FF9F0A">
+              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+            </svg>
+            <h2 style="color: #FF9F0A">GUIA DE BAIRROS CASTANHAL</h2>
+          </div>
+          <div class="neighborhood-guia">
+            <div class="neighborhood-selector">
+              <label for="select-neighborhood">SELECIONE O BAIRRO ALVO</label>
+              <select id="select-neighborhood">
+                <option value="centro" selected>📍 Centro</option>
+                <option value="ianetama">📍 Ianetama</option>
+                <option value="jaderlandia">📍 Jaderlândia</option>
+                <option value="apeu">📍 Apeú</option>
+                <option value="estrela">📍 Estrela</option>
+              </select>
+            </div>
+            <div class="neighborhood-content">
+              <p id="neighborhood-advice" class="neighborhood-advice-text">
+                Carregando estratégia do bairro...
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Checklist (Campanha de Lançamento) -->
+        <div id="tab-checklist" class="growth-tab-content">
+          <div class="tips-header">
+            <svg class="tips-icon" viewBox="0 0 24 24" fill="none" style="color: #0A84FF">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17Z" fill="currentColor"/>
+            </svg>
+            <h2 style="color: #0A84FF">CHECKLIST DE LANÇAMENTO</h2>
+          </div>
+          <div class="growth-checklist-container">
+            <div class="checklist-progress-bar-wrapper">
+              <span id="checklist-progress-text">Progresso: 0% (0 de 5)</span>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="checklist-progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+            <ul class="checklist-items" id="checklist-items-list">
+              <!-- Rendered Dynamically in JS -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tab 5: Metas (Goals Tracker com Anel iOS) -->
+        <div id="tab-meta" class="growth-tab-content">
+          <div class="tips-header">
+            <svg class="tips-icon" viewBox="0 0 24 24" fill="none" style="color: var(--accent-green)">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/>
+              <circle cx="12" cy="12" r="4" fill="currentColor"/>
+            </svg>
+            <h2 style="color: var(--accent-green)">METAS E GANHOS DIÁRIOS</h2>
+          </div>
+          <div class="goals-container">
+            <div class="goals-visual">
+              <svg class="goals-ring-svg" viewBox="0 0 100 100">
+                <circle class="ring-bg" cx="50" cy="50" r="40" />
+                <circle class="ring-fill" id="goals-ring-fill" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2" />
+              </svg>
+              <div class="ring-text">
+                <span class="ring-percent" id="goals-ring-percent">0%</span>
+                <span class="ring-label">Concluído</span>
+              </div>
+            </div>
+            <div class="goals-data">
+              <div class="goals-row">
+                <span>Ganhos:</span>
+                <strong id="goals-today-value" style="color: var(--accent-green);">R$ 0,00</strong>
+              </div>
+              <div class="goals-row">
+                <span>Gastos:</span>
+                <strong id="goals-expenses-value" style="color: var(--accent-red);">R$ 0,00</strong>
+              </div>
+              <div class="goals-row" style="border-top: 1px dashed var(--card-border); padding-top: 4px; margin-top: 2px;">
+                <span>Saldo Líquido:</span>
+                <strong id="goals-net-value" style="color: #ffffff;">R$ 0,00</strong>
+              </div>
+              <div class="goals-row" style="margin-top: 4px;">
+                <span>Meta:</span>
+                <input type="number" id="input-daily-goal" value="200" min="10" max="2000" step="10">
+              </div>
+            </div>
+          </div>
+          <div class="goals-actions">
+            <div class="goals-add-box">
+              <input type="number" id="input-add-earning" placeholder="Ganhos (R$)" min="1">
+              <button id="btn-add-earning" class="btn-green-sm">+ Add</button>
+            </div>
+          </div>
+
+          <!-- Livro de Caixa (Expense Tracker) -->
+          <div class="expense-tracker-box" style="margin-top: 10px; background: rgba(255,255,255,0.01); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+            <div class="expense-inputs" style="display: flex; gap: 6px;">
+              <input type="text" id="input-expense-desc" placeholder="Gasto (ex: Almoço)" style="flex: 1.5; background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-body); outline: none;">
+              <input type="number" id="input-expense-val" placeholder="Valor" style="flex: 1; background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-body); outline: none;">
+              <button id="btn-add-expense" class="btn-green-sm" style="padding: 6px 10px; font-size: 11px; background: rgba(255, 69, 58, 0.15); border: 1px solid rgba(255, 69, 58, 0.3); color: var(--accent-red); margin-left: 0;">+ Gasto</button>
+            </div>
+            <ul class="expenses-list" id="expenses-list-container" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; max-height: 80px; overflow-y: auto;">
+              <!-- Renderizado dinamicamente -->
+            </ul>
+            <div style="display: flex; justify-content: flex-end;">
+              <button id="btn-reset-goals" class="btn-secondary-sm" style="color: var(--accent-red); background: none; font-size: 10px; padding: 2px 6px;">Zerar Meta & Saldo</button>
+            </div>
+          </div>
+
+          <!-- Gráfico de Ganhos Semanais Cupertino -->
+          <div class="weekly-chart-wrapper" style="margin-top: 16px; border-top: 1px solid var(--card-border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-family: var(--font-title); font-size: 9px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase;">📊 DESEMPENHO SEMANAL (SEG - DOM)</span>
+            <div class="weekly-chart" id="weekly-chart" style="display: flex; justify-content: space-between; align-items: flex-end; height: 100px; padding: 10px 0 0 0; margin-top: 4px;">
+              <!-- Renderizado dinamicamente em app.js -->
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 4px; color: var(--text-secondary); font-family: var(--font-body);">
+              <span>Total da Semana:</span>
+              <strong id="weekly-total-value" style="color: #ffffff; font-size: 12px;">R$ 0,00</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 6: Contatos (Contatos Castanhal) -->
+        <div id="tab-contacts" class="growth-tab-content">
+          <div class="tips-header">
+            <svg class="tips-icon" viewBox="0 0 24 24" fill="none" style="color: #FF453A; width: 20px; height: 20px;">
+              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="currentColor"/>
+            </svg>
+            <h2 style="color: #FF453A">TELEFONES ÚTEIS CASTANHAL</h2>
+          </div>
+          <div class="contacts-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+            <a href="tel:192" class="contact-card" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; text-decoration: none; color: inherit; transition: var(--transition-smooth);">
+              <span class="contact-name" style="font-family: var(--font-title); font-size: 13px; font-weight: 700; color: var(--accent-red);">🚑 SAMU</span>
+              <span class="contact-number" style="font-family: var(--font-body); font-size: 11px; color: var(--text-secondary);">Disque 192</span>
+            </a>
+            <a href="tel:190" class="contact-card" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; text-decoration: none; color: inherit; transition: var(--transition-smooth);">
+              <span class="contact-name" style="font-family: var(--font-title); font-size: 13px; font-weight: 700; color: #0A84FF;">🚓 Polícia Militar</span>
+              <span class="contact-number" style="font-family: var(--font-body); font-size: 11px; color: var(--text-secondary);">Disque 190</span>
+            </a>
+            <a href="tel:193" class="contact-card" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; text-decoration: none; color: inherit; transition: var(--transition-smooth);">
+              <span class="contact-name" style="font-family: var(--font-title); font-size: 13px; font-weight: 700; color: #FF9F0A;">🚒 Bombeiros</span>
+              <span class="contact-number" style="font-family: var(--font-body); font-size: 11px; color: var(--text-secondary);">Disque 193</span>
+            </a>
+            <a href="tel:9137212454" class="contact-card" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; text-decoration: none; color: inherit; transition: var(--transition-smooth);">
+              <span class="contact-name" style="font-family: var(--font-title); font-size: 13px; font-weight: 700; color: var(--accent-green);">🏥 UPA Castanhal</span>
+              <span class="contact-number" style="font-family: var(--font-body); font-size: 11px; color: var(--text-secondary);">(91) 3721-2454</span>
+            </a>
+            <a href="tel:91988887777" class="contact-card" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; text-decoration: none; color: inherit; transition: var(--transition-smooth);">
+              <span class="contact-name" style="font-family: var(--font-title); font-size: 13px; font-weight: 700; color: #fff;">🛞 Guincho 24h</span>
+              <span class="contact-number" style="font-family: var(--font-body); font-size: 11px; color: var(--text-secondary);">(91) 98888-7777</span>
+            </a>
+            <a href="tel:91999998888" class="contact-card" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; text-decoration: none; color: inherit; transition: var(--transition-smooth);">
+              <span class="contact-name" style="font-family: var(--font-title); font-size: 13px; font-weight: 700; color: #fff;">🔧 Mecânico 24h</span>
+              <span class="contact-number" style="font-family: var(--font-body); font-size: 11px; color: var(--text-secondary);">(91) 99999-8888</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tab 7: Roadmap (Planejamento Futuro) -->
+        <div id="tab-roadmap" class="growth-tab-content">
+          <div class="tips-header">
+            <svg class="tips-icon" viewBox="0 0 24 24" fill="none" style="color: #FF9F0A; width: 20px; height: 20px;">
+              <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" fill="currentColor"/>
+            </svg>
+            <h2 style="color: #FF9F0A">🗺️ ROADMAP DE LANÇAMENTO</h2>
+          </div>
+          <div class="roadmap-container" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+            <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;">Acompanhe e planeje as próximas fases de expansão e tecnologia da Uppi Mobilidade em Castanhal.</p>
+            
+            <div class="roadmap-phases" id="roadmap-phases-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding-right: 4px;">
+              <!-- Renderizado dinamicamente em app.js -->
+            </div>
+            
+            <div class="add-roadmap-box" style="border-top: 1px solid var(--card-border); padding-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-family: var(--font-title); font-size: 9px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase;">➕ ADICIONAR OBJETIVO AO ROADMAP</span>
+              <div style="display: flex; gap: 6px;">
+                <input type="text" id="input-roadmap-text" placeholder="Ex: Lançar app na App Store" style="flex: 2; background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-body); outline: none;">
+                <select id="select-roadmap-phase" style="flex: 1.2; background: #2c2c2e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-body); outline: none;">
+                  <option value="Fase 1: Preparação">Fase 1</option>
+                  <option value="Fase 2: Lançamento">Fase 2</option>
+                  <option value="Fase 3: Consolidação">Fase 3</option>
+                </select>
+                <button id="btn-add-roadmap" class="btn-green-sm" style="padding: 6px 12px; font-size: 11px;">+ Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Layout de duas colunas para o Feed -->
+    <div class="feed-container-layout">
+      <!-- Sidebar de Categorias (Esquerda) -->
+      <aside class="feed-sidebar">
+        <div class="sidebar-header">
+          <h3>Categorias</h3>
+        </div>
+        <div class="filter-pills-container vertical" id="filter-pills-container">
+          <!-- Renderizado dinamicamente em app.js -->
+        </div>
+      </aside>
+
+      <!-- Conteúdo Principal do Feed (Direita) -->
+      <div class="feed-main-content">
+        <!-- Barra de Busca -->
+        <div class="search-wrapper" style="position: relative; width: 100%; margin-bottom: 20px;">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input type="search" id="search-input" placeholder="Pesquisar notícias ou mensagens..." style="padding-right: 48px;">
+          <button id="btn-voice-search" class="btn-voice-search" title="Pesquisar por voz" type="button">
+            <svg class="voice-icon" viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+              <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Cards Grid -->
+        <section class="cards-grid" id="cards-grid">
+          <!-- Generated dynamically in app.js -->
+        </section>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state hidden">
+          <svg viewBox="0 0 24 24" fill="none" class="empty-icon">
+            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <p>Nenhum comunicado ou mensagem encontrado.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay hidden" id="modal-settings">
+    <div class="modal-card" style="max-width: 450px;">
+      <div class="modal-header">
+        <h2>Ajustes e Personalização</h2>
+        <button class="btn-close" id="btn-close-settings" aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h3 style="font-family: var(--font-title); font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px;">🎨 COR DE DESTAQUE DO APP</h3>
+          <div class="theme-options" style="display: flex; gap: 8px; margin-top: 8px;">
+            <button class="theme-btn active" data-theme="green" style="flex: 1; background: #30D158; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; font-family: var(--font-body);">Verde</button>
+            <button class="theme-btn" data-theme="blue" style="flex: 1; background: #0A84FF; color: #fff; border: none; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; font-family: var(--font-body);">Azul</button>
+            <button class="theme-btn" data-theme="amber" style="flex: 1; background: #FF9F0A; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; font-family: var(--font-body);">Laranja</button>
+            <button class="theme-btn" data-theme="red" style="flex: 1; background: #FF453A; color: #fff; border: none; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; font-family: var(--font-body);">Vermelho</button>
+          </div>
+        </div>
+        <div class="settings-section" style="border-top: 1px solid var(--card-border); padding-top: 15px; margin-top: 15px;">
+          <h3 style="font-family: var(--font-title); font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px;">🔋 ECONOMIZADOR DE BATERIA</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <span style="font-size: 12px; color: var(--text-secondary);">Modo OLED (Preto Absoluto)</span>
+            <label class="switch-ios" style="position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer;">
+              <input type="checkbox" id="toggle-oled-mode" style="opacity: 0; width: 0; height: 0;">
+              <span class="switch-slider" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #3a3a3c; transition: .3s; border-radius: 24px;"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-section" style="border-top: 1px solid var(--card-border); padding-top: 15px; margin-top: 15px;">
+          <h3 style="font-family: var(--font-title); font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px;">💾 BACKUP E SINCRONIZAÇÃO</h3>
+          <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.4;">Salve todas as suas notas, metas e checklists em um arquivo ou restaure um backup existente.</p>
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-export-backup" class="btn-secondary" style="flex: 1; text-align: center; border: 1px solid var(--card-border); border-radius: 8px; font-size: 12px; padding: 10px; color: #0A84FF; font-weight: 600; cursor: pointer; background: rgba(10, 132, 255, 0.05);">Exportar Backup 📤</button>
+            <button id="btn-import-backup" class="btn-secondary" style="flex: 1; text-align: center; border: 1px solid var(--card-border); border-radius: 8px; font-size: 12px; padding: 10px; color: #30D158; font-weight: 600; cursor: pointer; background: rgba(48, 209, 88, 0.05);">Importar Backup 📥</button>
+          </div>
+          <input type="file" id="import-backup-file" accept=".json" style="display: none;">
+        </div>
+        <div class="settings-section" style="border-top: 1px solid var(--card-border); padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 12px; color: #fff; font-family: var(--font-title); font-weight: 600;">Sessão Administrativa</h3>
+            <span style="font-size: 11px; color: var(--text-secondary);">admin@uppi.com.br</span>
+          </div>
+          <button id="btn-logout" class="btn-secondary-sm" style="color: var(--accent-red); background: none; border: 1.5px solid var(--accent-red); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: var(--font-body); font-weight: 600; font-size: 11px;">Sair (Logout)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compose Modal (Adicionar/Organizar Completo) -->
+  <div class="modal-overlay hidden" id="modal-compose">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Novo Comunicado</h2>
+        <button class="btn-close" id="btn-close-compose" aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Smart paste inside compose dialog too -->
+        <div class="compose-organizer-box">
+          <div class="organizer-header small">
+            <svg class="sparkles-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3V6M12 18V21M3 12H6M18 12H21" stroke="#30D158" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 8L13.5 10.5L16 12L13.5 13.5L12 16L10.5 13.5L8 12L10.5 10.5L12 8Z" fill="#30D158"/>
+            </svg>
+            <h3>ORGANIZADOR INTELIGENTE</h3>
+          </div>
+          <p class="organizer-box-desc">Cole seu texto completo abaixo. Ele será analisado para extrair o Título, Categoria, Autor e Conteúdo e preencher os campos abaixo sozinhos!</p>
+          <textarea id="modal-organizer-input" placeholder="Cole a mensagem completa ou anúncio bruto aqui..." rows="2"></textarea>
+        </div>
+
+        <form id="compose-form" class="compose-form">
+          <div class="form-group">
+            <label>CATEGORIA</label>
+            <div class="segmented-control">
+              <label class="segment-option">
+                <input type="radio" name="category" value="lancamento" checked>
+                <span>🚀 Lanç</span>
+              </label>
+              <label class="segment-option">
+                <input type="radio" name="category" value="comunicado">
+                <span>📢 Com</span>
+              </label>
+              <label class="segment-option">
+                <input type="radio" name="category" value="recrutamento">
+                <span>💼 Recrutamento</span>
+              </label>
+              <label class="segment-option">
+                <input type="radio" name="category" value="mensagem">
+                <span>✉️ Mens</span>
+              </label>
+              <label class="segment-option">
+                <input type="radio" name="category" value="dicas">
+                <span>💡 Dicas</span>
+              </label>
+              <label class="segment-option">
+                <input type="radio" name="category" value="regras">
+                <span>⚙️ Regras</span>
+              </label>
+              <label class="segment-option">
+                <input type="radio" name="category" value="custom">
+                <span>➕ Outra</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group hidden" id="custom-category-group">
+            <label for="form-custom-category">NOME DA NOVA CATEGORIA</label>
+            <input type="text" id="form-custom-category" placeholder="Ex: Financeiro, Dicas, Suporte">
+          </div>
+
+          <div class="form-group">
+            <label for="form-title">TÍTULO</label>
+            <input type="text" id="form-title" placeholder="Digite o título da publicação" required>
+          </div>
+
+          <div class="form-group">
+            <label for="form-author">AUTOR / SETOR</label>
+            <input type="text" id="form-author" placeholder="Ex: Equipe Uppi, Recursos Humanos" required>
+          </div>
+
+          <div class="form-group">
+            <label for="form-content">CONTEÚDO DA MENSAGEM</label>
+            <textarea id="form-content" placeholder="Escreva sua mensagem aqui..." rows="8" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="btn-cancel-compose">Cancelar</button>
+        <button type="submit" form="compose-form" class="btn-primary-action">Publicar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay hidden" id="modal-detail">
+    <div class="modal-card detail-card">
+      <div class="modal-header">
+        <span class="detail-category-badge" id="detail-badge">🚀 Lançamento</span>
+        <button class="btn-close" id="btn-close-detail" aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="modal-body detail-body">
+        <div class="detail-meta">
+          <span class="detail-author-wrap">
+            <svg viewBox="0 0 24 24" fill="none" class="meta-icon"><path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/></svg>
+            <span id="detail-author">Equipe Uppi</span>
+          </span>
+          <span class="detail-date-wrap">
+            <svg viewBox="0 0 24 24" fill="none" class="meta-icon"><path d="M19 4H18V2H16V4H8V2H6V4H5C3.89 4 3.01 4.9 3.01 6L3 20C3 21.1 3.89 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4ZM19 20H5V9H19V20ZM9 14H7V12H9V14ZM13 14H11V12H13V14ZM17 14H15V12H17V14ZM9 18H7V16H9V18ZM13 18H11V16H13V18ZM17 18H15V16H17V18Z" fill="currentColor"/></svg>
+            <span id="detail-date">11/06/2026</span>
+          </span>
+        </div>
+        <h1 class="detail-title" id="detail-title">Título do Comunicado</h1>
+        <hr class="detail-divider">
+        <div class="detail-content" id="detail-content">
+          Conteúdo completo...
+        </div>
+        <div class="detail-variables-container hidden" id="detail-variables-container">
+          <!-- Renderizado dinamicamente em app.js -->
+        </div>
+        <div class="detail-checklist-container hidden" id="detail-checklist-container">
+          <!-- Renderizado dinamicamente em app.js -->
+        </div>
+      </div>
+      <div class="modal-footer detail-footer" style="gap: 8px; justify-content: space-between;">
+        <button class="btn-readability" id="btn-toggle-readability" title="Melhorar quebras de linha para leitura" style="flex-grow: 1; padding: 12px 6px; font-size: 11px;">
+          <svg viewBox="0 0 24 24" fill="none" class="readability-icon" style="width: 14px; height: 14px; margin-top: 1px;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5C17 19.5 21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" fill="currentColor"/></svg>
+          <span id="btn-readability-text">Leitura 📖</span>
+        </button>
+        <button id="btn-read-audio" class="btn-readability" title="Ouvir mensagem por voz" style="flex-grow: 0.5; width: 44px; display: flex; align-items: center; justify-content: center; background: rgba(10, 132, 255, 0.1); border: 1px solid rgba(10, 132, 255, 0.2); color: #0a84ff; padding: 12px; cursor: pointer; border-radius: 10px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width: 14px; height: 14px; display: block;"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+        <button class="btn-copy-large" id="btn-copy-detail" style="flex-grow: 2; padding: 12px; font-size: 13px;">
+          <svg viewBox="0 0 24 24" fill="none" class="copy-icon" style="width: 16px; height: 16px;"><path d="M16 4H4V16H16V4ZM18 2H2V18H18V2ZM22 6H20V20H6V22H22V6Z" fill="currentColor"/></svg>
+          <span id="btn-copy-detail-text">Copiar</span>
+        </button>
+        <button class="btn-whatsapp-large" id="btn-whatsapp-detail" style="flex-grow: 2; padding: 12px; font-size: 13px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="copy-icon" style="width: 16px; height: 16px;"><path d="M12.012 2c-5.506 0-9.988 4.482-9.988 9.988 0 1.76.459 3.475 1.332 4.992L2 22l5.176-1.357c1.477.806 3.137 1.229 4.831 1.229 5.506 0 9.987-4.482 9.987-9.988C22 6.482 17.518 2 12.012 2zm0 18.294c-1.493 0-2.96-.401-4.243-1.162l-.305-.18-3.153.826.84-3.076-.197-.314c-.836-1.33-1.277-2.879-1.277-4.48.001-4.573 3.72-8.291 8.297-8.291 2.216.001 4.298.865 5.863 2.43 1.565 1.565 2.428 3.648 2.428 5.862-.002 4.573-3.722 8.291-8.297 8.291zm4.551-6.214c-.249-.125-1.477-.728-1.706-.811-.229-.083-.396-.125-.562.125-.166.249-.643.811-.788.975-.145.166-.29.187-.539.062-.25-.125-1.053-.388-2.007-1.239-.742-.662-1.242-1.48-1.388-1.729-.145-.249-.016-.384.109-.508.112-.112.249-.29.373-.436.125-.145.166-.249.249-.415.083-.166.042-.312-.021-.436-.062-.125-.562-1.351-.77-1.849-.2-.482-.404-.417-.551-.424-.143-.007-.307-.008-.472-.008-.166 0-.436.062-.663.312-.228.249-.871.851-.871 2.076s.892 2.409.991 2.541c.099.135 1.758 2.685 4.259 3.766.595.257 1.059.41 1.42.525.598.19 1.142.163 1.572.099.48-.072 1.477-.602 1.685-1.183.208-.581.208-1.079.145-1.183-.063-.104-.229-.166-.478-.291z"/></svg>
+          <span>Whats</span>
+        </button>
+        <button class="btn-delete-icon" id="btn-delete-detail" aria-label="Excluir" style="width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+          <svg viewBox="0 0 24 24" fill="none" style="width: 16px; height: 16px;"><path d="M19 4H15.5L14.5 3H9.5L8.5 4H5V6H19M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast hidden" id="toast-message">Copiado para a área de transferência!</div>
+
+  <!-- JavaScript File -->
+  <script src="app.js"></script>
+</body>
+</html>

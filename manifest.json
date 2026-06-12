@@ -1,0 +1,18 @@
+{
+  "short_name": "Uppi Notas",
+  "name": "Uppi Notas - Central de Mobilidade",
+  "description": "Central de organização e cópia rápida de mensagens e comunicados da Uppi Mobilidade.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0c0c0e",
+  "theme_color": "#1c1c1e",
+  "display": "standalone",
+  "orientation": "portrait"
+}
