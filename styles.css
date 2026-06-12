@@ -887,53 +887,314 @@ body {
   pointer-events: none;
 }
 
-/* Responsive Rules */
+/* ==========================================================================
+   RESPONSIVE SYSTEM — Mobile-first, all breakpoints
+   ========================================================================== */
+
+/* --- Tablet: max 900px --- */
 @media (max-width: 900px) {
   .cards-grid {
     grid-template-columns: 1fr;
   }
-  
   .hero-title {
     font-size: 32px;
   }
+  .top-panels-grid {
+    grid-template-columns: 1fr;
+  }
+  .feed-container-layout {
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+  }
 }
 
+/* --- Large Mobile: max 768px --- */
+@media (max-width: 768px) {
+  /* Layout */
+  .feed-container-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .feed-sidebar {
+    position: static;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+  .filter-pills-container.vertical {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+  .filter-pills-container.vertical::-webkit-scrollbar {
+    display: none;
+  }
+  .filter-pills-container.vertical .filter-pill {
+    width: auto;
+    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+  .feed-main-content {
+    width: 100%;
+  }
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* --- Mobile: max 600px --- */
 @media (max-width: 600px) {
+  /* Header */
   .app-header {
-    height: 56px;
+    height: 54px;
   }
   body {
-    padding-top: 56px;
+    padding-top: 54px;
   }
   .header-container {
-    padding: 0 16px;
+    padding: 0 14px;
   }
+  .logo-text {
+    font-size: 16px;
+  }
+
+  /* Main container */
   .main-container {
-    padding: 20px 16px;
-    gap: 24px;
+    padding: 16px 14px;
+    gap: 20px;
+  }
+
+  /* Hero */
+  .hero-section {
+    gap: 6px;
   }
   .hero-title {
-    font-size: 28px;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
   }
   .hero-subtitle {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.45;
   }
+
+  /* Organizer */
   .organizer-card {
-    padding: 16px;
+    padding: 14px;
+    gap: 10px;
+    border-radius: 12px;
   }
   .organizer-input-group {
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
   }
   .btn-green-round {
     width: 100%;
-    height: 40px;
+    height: 42px;
+    border-radius: 10px;
+  }
+
+  /* Feed sidebar on mobile: compact horizontal scroll */
+  .feed-container-layout {
+    gap: 12px;
+    margin-top: 0;
+  }
+  .feed-sidebar {
+    padding: 10px 12px;
+    border-radius: 10px;
+    gap: 10px;
+  }
+  .sidebar-header h3 {
+    font-size: 10px;
+  }
+  .filter-pills-container.vertical .filter-pill {
+    padding: 7px 12px;
+    font-size: 11.5px;
+  }
+
+  /* Cards */
+  .card {
+    padding: 14px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+  .card-title {
+    font-size: 15px;
+  }
+  .card-excerpt {
+    font-size: 13px;
+    -webkit-line-clamp: 2;
+  }
+  .card-footer {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn-copy,
+  .btn-whatsapp {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
+  /* Modals */
+  .modal-overlay {
+    padding: 8px;
+    align-items: flex-end;
   }
   .modal-card {
-    max-height: 95%;
+    max-height: 92vh;
+    border-radius: 20px 20px 14px 14px;
+    width: 100%;
+    max-width: 100%;
+  }
+  .modal-header {
+    padding: 14px 16px;
+  }
+  .modal-body {
+    padding: 14px 16px;
+    gap: 14px;
+  }
+  .modal-footer {
+    padding: 12px 16px;
   }
   .segmented-control {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 4px;
+  }
+  .segmented-control::-webkit-scrollbar {
+    display: none;
+  }
+  .segment-option span {
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* Tabs bar */
+  .tab-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 4px;
+    padding: 2px;
+  }
+  .tab-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .tab-btn {
+    font-size: 11px;
+    padding: 7px 10px;
+    white-space: nowrap;
+  }
+
+  /* Details modal */
+  .detail-content-body {
+    font-size: 14px;
+  }
+  .btn-favorite,
+  .btn-close {
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  /* Alerts banner */
+  .alerts-banner-container {
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  .alerts-title {
+    font-size: 10px;
+  }
+
+  /* Top panels */
+  .top-panels-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .tips-card,
+  .goals-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Growth tab grid */
+  .growth-tab-inner-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Contacts tab */
+  .contacts-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .contact-card {
+    padding: 12px 8px !important;
+    border-radius: 10px !important;
+  }
+  .contact-card span:last-child {
+    font-size: 10px !important;
+  }
+
+  /* Roadmap */
+  .roadmap-phase-card {
+    padding: 14px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Livro de Caixa */
+  .expense-item {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .expense-item-desc {
+    font-size: 11px;
+  }
+  .expense-item-val {
+    font-size: 11px;
+  }
+
+  /* Chart */
+  .weekly-chart {
+    gap: 4px;
+  }
+  .chart-bar-wrapper {
+    min-width: 30px;
+  }
+  .chart-day-label {
+    font-size: 9px;
+  }
+
+  /* Login card */
+  .login-card {
+    padding: 24px 18px;
+    border-radius: 16px;
+  }
+}
+
+/* --- Small Mobile: max 380px --- */
+@media (max-width: 380px) {
+  .hero-title {
+    font-size: 21px;
+  }
+  .card-title {
+    font-size: 14px;
+  }
+  .tab-btn {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+  .contacts-grid {
+    grid-template-columns: 1fr;
+  }
+  .header-container {
+    padding: 0 10px;
   }
 }
 
